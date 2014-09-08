@@ -1,6 +1,7 @@
 # angular-modal [![Build Status](https://travis-ci.org/btford/angular-modal.png)](https://travis-ci.org/btford/angular-modal)
 
 A modal factory service for AngularJS that makes it easy to add modals to your app.
+Forked from https://github.com/btford/angular-modal in order to enhance it to cancelOnEscape options and such
 
 
 ## Install
