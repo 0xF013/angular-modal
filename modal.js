@@ -80,7 +80,7 @@ factory('btfModal', function ($animate, $compile, $rootScope, $controller, $q, $
       }
       var deferred = $q.defer();
       if (element) {
-        $animate.leave(element, function () {
+        $animate.leave(element).then(function () {
           scope.$destroy();
           element = null;
           deferred.resolve();
