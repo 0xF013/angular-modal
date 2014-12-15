@@ -8,7 +8,7 @@
 'use strict';
 
 angular.module('btford.modal', []).
-factory('btfModal', function ($animate, $compile, $rootScope, $controller, $q, $http, $templateCache, $document) {
+factory('btfModal', function ($animate, $timeout, $compile, $rootScope, $controller, $q, $http, $templateCache, $document) {
   return function modalFactory (config) {
     if (!(!config.template ^ !config.templateUrl)) {
       throw new Error('Expected modal to have exacly one of either `template` or `templateUrl`');
@@ -51,13 +51,13 @@ factory('btfModal', function ($animate, $compile, $rootScope, $controller, $q, $
         throw new Error('The template contains no elements; you need to wrap text nodes')
       }
       if (closeOnEscape) {
-        $document.unbind("keydown");
-        $document.bind("keydown", function (event) {
+        $document.unbind("keydown").bind("keydown", function (event) {
             if(event.which == 27) {
-              deactivate();
+              // angularize
+              $timeout(deactivate);
             }
         });
-      }      
+      }
       $animate.enter(element, container);
       scope = $rootScope.$new();
       if (locals) {
@@ -74,21 +74,13 @@ factory('btfModal', function ($animate, $compile, $rootScope, $controller, $q, $
 
     function deactivate () {
       $document.unbind("keydown");
-      jQuery(element).remove();
       if (afterFocusOn) {
         jQuery(afterFocusOn).focus();
       }
-      var deferred = $q.defer();
-      if (element) {
-        $animate.leave(element).then(function () {
-          scope.$destroy();
-          element = null;
-          deferred.resolve();
-        });
-      } else {
-        deferred.resolve();
-      }
-      return deferred.promise;
+      return $animate.leave(element).then(function() {
+        scope.$destroy();
+        element = null;
+      });
     }
 
     function active () {
