@@ -58,7 +58,12 @@ factory('btfModal', function ($animate, $timeout, $compile, $rootScope, $control
             }
         });
       }
-      $animate.enter(element, container);
+      $animate.enter(element, container).then(function() {
+        // trap focus if jquery.trap is available
+        if (element.trap) {
+          element.trap();
+        }
+      });
       scope = $rootScope.$new();
       if (locals) {
         for (var prop in locals) {
